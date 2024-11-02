@@ -4,7 +4,7 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 
 export default defineConfig({
-  site: "roastpotatoes.github.io",
+  site: "https://roastpotatoes.github.io",
   base: "aboutcycling",
   integrations: [mdx(), sitemap(), tailwind()],
 });
