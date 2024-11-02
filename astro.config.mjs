@@ -5,6 +5,5 @@ import tailwind from "@astrojs/tailwind";
 
 export default defineConfig({
   site: "https://aboutcycling.xyz",
-  base: "aboutcycling",
   integrations: [mdx(), sitemap(), tailwind()],
 });
