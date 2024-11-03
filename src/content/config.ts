@@ -36,7 +36,6 @@ const events = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     draft: z.boolean().optional(),
-    demoURL: z.string().optional(),
     eventURL: z.string().optional()
   }),
 });
