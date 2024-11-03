@@ -36,7 +36,8 @@ const events = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     draft: z.boolean().optional(),
-    eventURL: z.string().optional()
+    eventURL: z.string().optional(),
+    kilometers: z.number().optional()  // Optional number field for kilometers
   }),
 });
 

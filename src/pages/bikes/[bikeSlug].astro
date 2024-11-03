@@ -23,9 +23,12 @@ const bike = await getCollection("bikes").then(async bikes => {
   return { ...selectedBike, Content };
 });
 
-// Fetch and render updates for this specific bike by filtering with bikeSlug
+// Fetch, sort, and render updates for this specific bike by filtering with bikeSlug
 const updates = await getCollection("updates").then(async allUpdates => {
-  const bikeUpdates = allUpdates.filter(update => update.data.bikeSlug === bikeSlug);
+  const bikeUpdates = allUpdates
+    .filter(update => update.data.bikeSlug === bikeSlug)
+    .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()); // Sort by date in descending order
+
   return await Promise.all(
     bikeUpdates.map(async update => {
       const { Content } = await update.render();
@@ -37,9 +40,9 @@ const updates = await getCollection("updates").then(async allUpdates => {
 
 <PageLayout title={bike.data.title} description={bike.data.description}>
   <Container>
-    <div class="space-y-10">
+    <div class="animate space-y-10">
       <!-- Bike Title and Description -->
-      <h1 class="font-semibold text-3xl text-black dark:text-white">
+      <h1 class="animate font-semibold text-3xl text-black dark:text-white">
         {bike.data.title}
       </h1>
       <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">

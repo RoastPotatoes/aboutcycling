@@ -5,17 +5,31 @@ import Container from "@components/Container.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import { EVENTS } from "@consts";
 
+// Fetch events and calculate total kilometers
 const events = (await getCollection("events"))
   .filter(project => !project.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Calculate the total kilometers cycled
+const totalKilometers = events.reduce((total, event) => {
+  return total + (event.data.kilometers || 0); // Add event kilometers or 0 if undefined
+}, 0);
 ---
 
 <PageLayout title={EVENTS.TITLE} description={EVENTS.DESCRIPTION}>
   <Container>
     <div class="space-y-10">
-      <div class="animate font-semibold text-black dark:text-white">
-        Events
+      <!-- Events Header with Total Kilometers -->
+      <div class="flex justify-between items-center">
+        <div class="animate font-semibold text-black dark:text-white">
+          Events
+        </div>
+        <div class="text-gray-600 dark:text-gray-400 font-semibold">
+          Total Kilometers: {totalKilometers} km
+        </div>
       </div>
+
+      <!-- Events List -->
       <ul class="animate flex flex-col gap-4">
         {
           events.map((project) => (
