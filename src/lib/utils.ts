@@ -20,21 +20,22 @@ export function readingTime(html: string) {
   return `${readingTimeMinutes} min read`;
 }
 
-export function dateRange(startDate: Date, endDate?: Date | string): string {
-  const startMonth = startDate.toLocaleString("default", { month: "short" });
-  const startYear = startDate.getFullYear().toString();
-  let endMonth;
-  let endYear;
+// src/lib/utils.ts
 
-  if (endDate) {
-    if (typeof endDate === "string") {
-      endMonth = "";
-      endYear = endDate;
-    } else {
-      endMonth = endDate.toLocaleString("default", { month: "short" });
-      endYear = endDate.getFullYear().toString();
-    }
+export function dateRange(dateStart?: string, dateEnd?: string): string {
+  const start = dateStart ? new Date(dateStart).toLocaleString() : 'Unknown start date';
+  const end = dateEnd ? new Date(dateEnd).toLocaleString() : 'Present';
+
+  // If both dates are available
+  if (dateStart && dateEnd) {
+    return `${start} - ${end}`;
   }
 
-  return `${startMonth}${startYear} - ${endMonth}${endYear}`;
+  // If only the start date is available
+  if (dateStart) {
+    return `${start} - ${end}`;
+  }
+
+  // If neither date is available
+  return 'No date information available';
 }

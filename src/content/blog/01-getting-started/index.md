@@ -1,9 +1,10 @@
 ---
 title: "Getting started"
 description: "Hit the ground running."
-date: "Mar 22 2024"
----
+date: "2024-11-03"
+draft: true
 
+---
 The basic configuration of Nano is pretty simple.
 
 Edit `src/consts.ts`

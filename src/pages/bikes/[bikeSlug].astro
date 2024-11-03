@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+
+
+// Fetch all bike slugs and return them for static paths
+export async function getStaticPaths() {
+  const bikes = await getCollection("bikes");
+  return bikes.map(bike => ({
+    params: { bikeSlug: bike.slug },
+  }));
+}
+
+const { bikeSlug } = Astro.params;
+
+// Fetch the specific bike data based on the slug
+const bike = await getCollection("bikes").then(bikes =>
+  bikes.find(bike => bike.slug === bikeSlug)
+);
+
+if (!bike) throw new Error(`Bike not found: ${bikeSlug}`);
+
+// Fetch updates for this specific bike by filtering with bikeSlug
+const updates = await getCollection("updates").then(allUpdates =>
+  allUpdates.filter(update => update.data.bikeSlug === bikeSlug)
+);
+
+---
+
+<PageLayout title={bike.data.title} description={bike.data.description}>
+  <Container>
+    <div class="space-y-10">
+      <!-- Bike Title and Description -->
+      <h1 class="font-semibold text-3xl text-black dark:text-white">
+        {bike.data.title}
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">
+        {bike.data.description}
+      </p>
+
+      <!-- Debugging Information
+      <div class="text-sm text-gray-500">
+        <strong>Debug Info:</strong>
+        <p>bikeSlug: {bikeSlug}</p>
+        <p>Number of updates found: {updates.length}</p>
+      </div> -->
+
+      <!-- Updates Section -->
+      <section>
+        <h2 class="text-2xl font-semibold text-black dark:text-white">Updates</h2>
+        <ul class="space-y-4 mt-4">
+          {updates.length > 0 ? updates.map(update => (
+            <li class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+              <div class="text-sm text-gray-600 dark:text-gray-400">
+                <FormattedDate date={update.data.date} />
+              </div>
+              <h3 class="font-medium text-black dark:text-white mt-1">
+                {update.data.title}
+              </h3>
+              <p class="text-gray-700 dark:text-gray-300 mt-1">
+                {update.body}
+              </p>
+            </li>
+          )) : <p>No updates available for this bike.</p>}
+        </ul>
+      </section>
+    </div>
+  </Container>
+</PageLayout>

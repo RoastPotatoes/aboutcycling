@@ -8,15 +8,15 @@ import BackToPrev from "@components/BackToPrev.astro";
 import Link from "@components/Link.astro";
 
 export async function getStaticPaths() {
-  const projects = (await getCollection("projects"))
+  const events = (await getCollection("events"))
     .filter(post => !post.data.draft)
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  return projects.map((project) => ({
+  return events.map((project) => ({
     params: { slug: project.slug },
     props: project,
   }));
 }
-type Props = CollectionEntry<"projects">;
+type Props = CollectionEntry<"events">;
 
 const project = Astro.props;
 const { Content } = await project.render();
@@ -25,8 +25,8 @@ const { Content } = await project.render();
 <PageLayout title={project.data.title} description={project.data.description}>
   <Container>
     <div class="animate">
-      <BackToPrev href="/projects">
-        Back to projects
+      <BackToPrev href="/events">
+        Back to events
       </BackToPrev>
     </div>
     <div class="space-y-1 my-10">
@@ -42,19 +42,11 @@ const { Content } = await project.render();
       <div class="animate text-2xl font-semibold text-black dark:text-white">
         {project.data.title}
       </div>
-      {(project.data.demoURL || project.data.repoURL) && (
+      {(project.data.eventURL) && (
         <nav class="animate flex gap-1">
-          {project.data.demoURL && (
-            <Link href={project.data.demoURL} external>
-              demo
-            </Link>
-          )}
-          {project.data.demoURL && project.data.repoURL && (
-            <span>/</span>
-          )}
-          {project.data.repoURL && (
-            <Link href={project.data.repoURL} external>
-              repo
+          {project.data.eventURL && (
+            <Link href={project.data.eventURL} external>
+              Event Link
             </Link>
           )}
         </nav>

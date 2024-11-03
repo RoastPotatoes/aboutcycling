@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import { BIKES } from "@consts";
+
+// Fetch all bikes
+const bikes = await getCollection("bikes");
+---
+
+<PageLayout title={BIKES.TITLE} description={BIKES.DESCRIPTION}>
+  <Container>
+    <div class="space-y-10">
+      <!-- Page Title -->
+      <div class="animate font-semibold text-2xl text-black dark:text-white">
+        Bikes
+      </div>
+      
+      <!-- Bike Entries List -->
+      <ul class="flex flex-col space-y-8">
+        {bikes.map(bike => (
+          <li class="animate bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <!-- Bike Link -->
+            <a href={`/bikes/${bike.slug}`} class="block hover:underline">
+              <h3 class="font-semibold text-lg text-black dark:text-white">
+                {bike.data.title}
+              </h3>
+            </a>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              {bike.data.description}
+            </p>
+
+            <!-- View More Link -->
+            <a href={`/bikes/${bike.slug}`} class="text-blue-500 hover:underline">
+              View Details
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Container>
+</PageLayout>
