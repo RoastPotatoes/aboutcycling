@@ -1,6 +1,4 @@
 ---
 title: "Dawes Streetswise"
-description: "A rugged bike for off-road trails."
+description: "A city tourer converted into an audax bike"
 ---
-
-Added

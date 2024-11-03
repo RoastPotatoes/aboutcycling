@@ -4,7 +4,6 @@ import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 
-
 // Fetch all bike slugs and return them for static paths
 export async function getStaticPaths() {
   const bikes = await getCollection("bikes");
@@ -15,18 +14,25 @@ export async function getStaticPaths() {
 
 const { bikeSlug } = Astro.params;
 
-// Fetch the specific bike data based on the slug
-const bike = await getCollection("bikes").then(bikes =>
-  bikes.find(bike => bike.slug === bikeSlug)
-);
+// Fetch the specific bike data and render the content based on the slug
+const bike = await getCollection("bikes").then(async bikes => {
+  const selectedBike = bikes.find(bike => bike.slug === bikeSlug);
+  if (!selectedBike) throw new Error(`Bike not found: ${bikeSlug}`);
+  
+  const { Content } = await selectedBike.render();
+  return { ...selectedBike, Content };
+});
 
-if (!bike) throw new Error(`Bike not found: ${bikeSlug}`);
-
-// Fetch updates for this specific bike by filtering with bikeSlug
-const updates = await getCollection("updates").then(allUpdates =>
-  allUpdates.filter(update => update.data.bikeSlug === bikeSlug)
-);
-
+// Fetch and render updates for this specific bike by filtering with bikeSlug
+const updates = await getCollection("updates").then(async allUpdates => {
+  const bikeUpdates = allUpdates.filter(update => update.data.bikeSlug === bikeSlug);
+  return await Promise.all(
+    bikeUpdates.map(async update => {
+      const { Content } = await update.render();
+      return { ...update, Content };
+    })
+  );
+});
 ---
 
 <PageLayout title={bike.data.title} description={bike.data.description}>
@@ -40,12 +46,13 @@ const updates = await getCollection("updates").then(allUpdates =>
         {bike.data.description}
       </p>
 
-      <!-- Debugging Information
-      <div class="text-sm text-gray-500">
-        <strong>Debug Info:</strong>
-        <p>bikeSlug: {bikeSlug}</p>
-        <p>Number of updates found: {updates.length}</p>
-      </div> -->
+      <!-- Render Main Bike Content -->
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-black dark:text-white">About This Bike</h2>
+        <article>
+          <bike.Content />
+        </article>
+      </section>
 
       <!-- Updates Section -->
       <section>
@@ -59,9 +66,10 @@ const updates = await getCollection("updates").then(allUpdates =>
               <h3 class="font-medium text-black dark:text-white mt-1">
                 {update.data.title}
               </h3>
-              <p class="text-gray-700 dark:text-gray-300 mt-1">
-                {update.body}
-              </p>
+              <!-- Render the Markdown Content with Images and HTML -->
+              <article>
+                <update.Content />
+              </article>
             </li>
           )) : <p>No updates available for this bike.</p>}
         </ul>
