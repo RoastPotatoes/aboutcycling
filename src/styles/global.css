@@ -1,3 +1,13 @@
+/* global.css */
+
+/* Custom Font */
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/fonts/CalSans-SemiBold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -70,4 +80,10 @@ html #back-to-top {
 
 html.scrolled #back-to-top {
   @apply opacity-100 pointer-events-auto;
+}
+
+/* Custom Font Utility Class */
+.font-title {
+  @apply font-sans;
+  font-family: 'CustomFont', sans-serif;
 }
