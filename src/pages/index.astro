@@ -18,7 +18,6 @@ const events = (await getCollection("events"))
   .slice(0,SITE.NUM_EVENTS_ON_HOMEPAGE);
 
 const allbikes = (await getCollection("bikes"))
-  .sort((a, b) => new Date(b.data.dateStart).valueOf() - new Date(a.data.dateStart).valueOf())
   .slice(0,SITE.NUM_BIKES_ON_HOMEPAGE);
 
 const bike = await Promise.all(
