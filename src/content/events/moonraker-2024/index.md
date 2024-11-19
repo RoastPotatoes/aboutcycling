@@ -4,7 +4,6 @@ description: "300K round trip to bournemouth through the night"
 date: "2024-11-15"
 kilometers: 300
 eventURL: "https://www.pedalution.co.uk/events/moonrakers-sunseekers-300/"
-draft: true
 ---
 ![](liliput.svg)
 300K Audax
@@ -19,11 +18,11 @@ I'd been planning this for a while and it had been the main focus of my life for
 I was worried about what I needed to bring and how I'd bring it. Stories of last years below freezing temperatures (seemingly decreased every time I was told about it reaching -10 degrees) had me scared.
 My plan was to keep it light-ish. On the butt buster I overpacked with a 14l saddle pack packed with who knows what, none of which I actually used. 
 
-![Checklits for cycle](checklist.jpg)
+![Checklist for cycle](checklist.jpg)
 
 My main concern was having enough layers and having enough space to store layers if I needed to remove them. The latter not being an issue at all in the end.
 
-What I settled on was a [carradice super C rack pack](https://carradice.co.uk/products/super-c-rackbag)! (£25 from ebay) and of course for that I'd then need a pannier rack to fit it. I settled on a Tortec Ultralite weighing 560g (£10 Facebook marketplace). This combined with my expensive tailfin framebag gave me enough space for everything I needed.
+What I settled on was a [Carradice super C rack pack](https://carradice.co.uk/products/super-c-rackbag)! (£25 from ebay) and of course for that I'd then need a pannier rack to fit it. I settled on a Tortec Ultralite weighing 560g (£10 Facebook marketplace). This combined with my expensive tailfin framebag gave me enough space for everything I needed.
 
 I was very pleased with these purchases and especially finding the exact rack I wanted on Facebook for cheap.
 
@@ -49,7 +48,7 @@ The other consideration was the temperature. I purchased all my new kit from yky
 I will test these a bit more to write a more meaningful review.
 
 ## Start
-Starting at the Felix adventure park it was an amazing atmosphere. My depature slot was 22:20 but I wanted to start with ym friends so I bumped myself up to 22:00
+Starting at the Felix adventure park it was an amazing atmosphere. My depature slot was 22:20 but I wanted to start with my friends so I bumped myself up to 22:00
 
 Each wave gets funneled into a basketball court and receives a briefing. 
 
@@ -80,33 +79,33 @@ The cold was starting to get to my hands and I couldn' feel them. Luckily I had 
 ## 100-150 4:20AM
 This is where I started to feel tired. 
 
-The next control was at a petrol station so I was just constantly on the lookout for every petrol sation. It always seemed like it wa the next one.
+The next control was at a petrol station so I was just constantly on the lookout for every petrol station. It always seemed like it was the next one.
 
-Huddled around the corner we had some quick snacks a lucozade sport.
+Huddled around the corner we had some quick snacks.
 
-At this stop I went for my Styrkr caffeine mix. I was trying to hold off caffeine for as long as posible to retain it's effects.
+At this stop I went for my Styrkr caffeine mix. I was trying to hold off caffeine for as long as possible to retain its effects.
 
 ![texaco](texaco.jpg)
 
 
-## 150-200 5:30AM
+## 160K 5:30AM
 We finally made it to Poole. This was to be the light on the horizon as we knew there would be breakfast.
 My favourite part of this leg was riding along the Bournemouth beach. Although it seemed to go on for an eternity, it was very serene with the sound of the waves by my side.
 
 I couldn't eat my beans fast enough. 
 
-At this point I was thorougly tired, but it didn't seem to matter, it was the tirednes that could be ignored.
+At this point I was thoroughly tired, but it didn't seem to matter, it was the tiredness that could be ignored.
 
 |![coffee in plastic cup](coffee.jpg)|![beans sausage and potato](beans.jpg)|
 |-|-|
 
-## 200-250 7:30AM
+## 188K 7:30AM
 Another stop at the View Coffee Shop. At this point I wanted as much caffeine as possible. So I had a double espresso.
 
 This is when I started to have some knee pain.
 
 ## Podimore 10AM
-My biggest regret here was no getting a whopper and fries. I had a bacon sandwich.
+My biggest regret here was not getting a whopper and fries. I had a bacon sandwich.
 
 I decided now was time for my secret weapon a monster energy Australian lemonade. I filled up my water bottle for the next leg of the journey.
 
@@ -118,7 +117,7 @@ The monster energy somewhat got me through, A little nauseous from the sugary co
 
 ![strawberry line](strawberry-line-cafe.jpg)
 
-## The final stretch
+## The final stretch 
 Well it only got harder. My knees were in a lot of pain at this point and became a lot harder to ignore, but as we went on I was really struggling with it. I tired to keep as straight and steady as possible, any irregular movement caused a sharp pain. 
 
 Getting back into Bristol I thought about going home as the route went past my house. It was only 5k to the finish, but I thought I'd be happier to sit on the sofa than continue. Of course I didn't, and we made it back to the adventure pack.
