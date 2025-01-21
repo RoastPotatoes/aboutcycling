@@ -129,7 +129,8 @@ I wanted to get a team photo at the end, but I entirely forgot. I handed in my b
 - 2 sandwiches would probably be fine.
 - More caffeine products
 - Better bike fit
-- YKYW gloves aren't quite warm enough
+- YKYW gloves aren't quite warm enoug
+- Lumintop B01 was the best purchase and I didn't even have to touch the two spare batteries I bought.
 
 
 For some people this is a drop in the bucket of long distance cycling. For me, this was my next step up in testing and pushing myself further. If it weren't for my knees I think I would have found it a little easier. So I need to perfect my bike fit as best I can and perhaps do some knee exercises.

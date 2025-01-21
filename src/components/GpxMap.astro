@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  gpxFile: string;
+  annotations?: {
+    lat: number;
+    lon: number;
+    text: string;
+    image?: string;
+  }[];
+}
+
+const { gpxFile, annotations = [] } = Astro.props;
+---
+
+<div id="map" class="map-container"></div>
+
+<script define:vars={{ gpxFile, annotations }}>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  import gpxParser from 'gpxparser';
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Initialize the map
+      const map = L.map('map').setView([0, 0], 2);
+
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // Load and parse GPX file
+      const response = await fetch(gpxFile);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const gpxData = await response.text();
+      const gpx = new gpxParser();
+      gpx.parse(gpxData);
+
+      // Draw GPX track on the map
+      const track = L.geoJSON(gpx.toGeoJSON()).addTo(map);
+
+      // Fit the map to the track bounds
+      if (track.getBounds().isValid()) {
+        map.fitBounds(track.getBounds());
+      } else {
+        console.error('Invalid track bounds');
+      }
+
+      // Add markers for annotations
+      annotations.forEach(({ lat, lon, text, image }) => {
+        const marker = L.marker([lat, lon]).addTo(map);
+        let popupContent = `<p>${text}</p>`;
+        if (image) {
+          popupContent += `<img src="${image}" alt="${text}" style="max-width: 200px; max-height: 200px;">`;
+        }
+        marker.bindPopup(popupContent);
+      });
+    } catch (error) {
+      console.error('Error loading or parsing GPX file:', error);
+    }
+  });
+</script>
+
+<style>
+  .map-container {
+    height: 400px;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+</style>
+

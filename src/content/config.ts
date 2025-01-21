@@ -6,7 +6,8 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    draft: z.boolean().optional()
+    draft: z.boolean().optional(),
+    gpxFile: z.string().optional()
   }),
 });
 
@@ -37,7 +38,8 @@ const events = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     eventURL: z.string().optional(),
-    kilometers: z.number().optional()  // Optional number field for kilometers
+    kilometers: z.number().optional(),  // Optional number field for kilometers
+    gpxFile: z.string().optional()
   }),
 });
 

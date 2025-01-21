@@ -1,0 +1,127 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import { readingTime } from "@lib/utils";
+import BackToPrev from "@components/BackToPrev.astro";
+import { onMount } from "solid-js";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog"))
+    .filter(post => !post.data.draft)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+type Props = CollectionEntry<"blog">;
+
+const post = Astro.props;
+const { Content } = await post.render();
+
+let map; // Map reference
+onMount(() => {
+  if (post.data.gpxFile) {
+    map = L.map("map").setView([51.505, -0.09], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
+
+    new L.GPX(post.data.gpxFile, {
+      async: true,
+      marker_options: {
+        startIconUrl:
+          "/leaflet-icons/pin-icon-start.png",
+        endIconUrl:
+          "/leaflet-icons/pin-icon-end.png",
+        shadowUrl:
+          "/leaflet-icons/pin-shadow.png"
+      },
+    })
+      .on("loaded", function (e) {
+        map.fitBounds(e.target.getBounds());
+      })
+      .on("error", function (e) {
+        console.error("Error loading GPX file:", e);
+      })
+      .addTo(map);
+  }
+});
+---
+
+<PageLayout title={post.data.title} description={post.data.description}>
+  <Container>
+    <div class="animate">
+      <BackToPrev href="/blog">
+        Back to blog
+      </BackToPrev>
+    </div>
+    <div class="space-y-1 my-10">
+      <div class="animate flex items-center gap-1.5">
+        <div class="font-base text-sm">
+          <FormattedDate date={post.data.date} />
+        </div>
+        &bull;
+        <div class="font-base text-sm">
+          {readingTime(post.body)}
+        </div>
+      </div>
+      <div class="animate text-2xl font-semibold text-black dark:text-white">
+        {post.data.title}
+      </div>
+    </div>
+    <article class="animate">
+      <Content />
+    </article>
+
+    {post.data.gpxFile && (
+      <div class="my-10">
+        <h2 class="text-xl font-semibold">Map</h2>
+        <div id="map" style="width: 100%; height: 500px;" data-gpx-path={post.data.gpxFile}></div>
+
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"
+        />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.1/gpx.min.js"></script>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const mapElement = document.getElementById("map");
+            const gpxFilePath = mapElement.dataset.gpxPath; // Retrieve the path
+            console.log("Resolved GPX File Path:", gpxFilePath);
+
+            const map = L.map("map").setView([51.505, -0.09], 13);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+              maxZoom: 19,
+            }).addTo(map);
+
+            new L.GPX(gpxFilePath, {
+              async: true,
+              marker_options: {
+                startIconUrl:
+                  "/leaflet-icons/pin-icon-start.png",
+                endIconUrl:
+                  "/leaflet-icons/pin-icon-end.png",
+                shadowUrl:
+                  "/leaflet-icons/images/pin-shadow.png",
+              },
+            })
+              .on("loaded", function (e) {
+                map.fitBounds(e.target.getBounds());
+              })
+              .on("error", function (e) {
+                console.error("Error loading GPX file:", e);
+              })
+              .addTo(map);
+          });
+        </script>
+      </div>
+    )}
+  </Container>
+</PageLayout>

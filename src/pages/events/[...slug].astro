@@ -6,6 +6,8 @@ import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
 import Link from "@components/Link.astro";
+import { onMount } from "solid-js";
+
 
 export async function getStaticPaths() {
   const events = (await getCollection("events"))
@@ -20,6 +22,36 @@ type Props = CollectionEntry<"events">;
 
 const project = Astro.props;
 const { Content } = await project.render();
+
+let map; // Map reference
+onMount(() => {
+  if (events.data.gpxFile) {
+    map = L.map("map").setView([51.505, -0.09], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
+
+    new L.GPX(events.data.gpxFile, {
+      async: true,
+      marker_options: {
+        startIconUrl:
+          "/leaflet-icons/pin-icon-start.png",
+        endIconUrl:
+          "/leaflet-icons/pin-icon-end.png",
+        shadowUrl:
+          "/leaflet-icons/pin-shadow.png",
+      },
+    })
+      .on("loaded", function (e) {
+        map.fitBounds(e.target.getBounds());
+      })
+      .on("error", function (e) {
+        console.error("Error loading GPX file:", e);
+      })
+      .addTo(map);
+  }
+});
 ---
 
 <PageLayout title={project.data.title} description={project.data.description}>
@@ -53,6 +85,160 @@ const { Content } = await project.render();
       )}
     </div>
     <article class="animate">
+        {project.data.gpxFile && (
+      <div class="my-10">
+<div id="map" style="width: 100%; height: 500px; border-radius: 10px; overflow: hidden;" data-gpx-path={project.data.gpxFile}></div>
+<div id="elevation-div" style="width: 100%; border-radius: 10px; overflow: hidden;"></div>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"
+        />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/2.1.0/gpx.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/@raruto/leaflet-elevation/dist/leaflet-elevation.css" />
+<script src="https://unpkg.com/@raruto/leaflet-elevation/dist/leaflet-elevation.js"></script>
+
+       <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const mapElement = document.getElementById("map");
+    const gpxFilePath = mapElement.dataset.gpxPath; // Retrieve the path
+    console.log("Resolved GPX File Path:", gpxFilePath);
+
+    const map = L.map("map").setView([51.505, -0.09], 15); // Adjusted zoom level to 15
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Add elevation control to the map
+    const elevationControl = L.control.elevation({
+      theme: "steelblue-theme",
+      detached: true,
+      elevationDiv: "#elevation-div", // Ensure this div exists in your HTML
+      followMarker: true,
+      autofitBounds: true,
+      waypoints: true,
+      wptIcons: false,
+      altitude: true,
+      distance: true, 
+          distanceMarkers: false,
+      height: 200,
+      collapsed: true,
+      time: true,
+          // Toggle "leaflet-edgescale" integration
+    edgeScale: false,
+    
+    // Toggle "leaflet-hotline" integration
+    hotline: true,
+        autofitBounds: true,
+    });
+    elevationControl.addTo(map);
+
+    // Load the GPX file using fetch and parse it
+    fetch(gpxFilePath)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load GPX file: ${response.statusText}`);
+        }
+        return response.text();
+      })
+      .then((gpxData) => {
+        // Parse GPX using leaflet-elevation's loadData function
+        elevationControl.load(gpxData, "gpx");
+
+        // Add the GPX layer to the map using leaflet-gpx for display
+        const gpxLayer = new L.GPX(gpxData, {
+          async: true,
+          marker_options: {
+            startIconUrl: "/leaflet-icons/pin-icon-start.png",
+            endIconUrl: "/leaflet-icons/pin-icon-end.png",
+            shadowUrl: "/leaflet-icons/images/pin-shadow.png",
+          },
+        })
+          .on("loaded", function (e) {
+            const gpx = e.target;
+            map.fitBounds(gpx.getBounds());
+
+            // Retrieve additional data
+            const startTime = gpx.get_start_time().toISOString();
+            const endTime = gpx.get_end_time().toISOString();
+            const movingTime = gpx.get_moving_time();
+            const movingSpeed = gpx.get_moving_speed().toFixed(2);
+            const elevationGain = gpx.get_elevation_gain().toFixed(2);
+
+            const movingTimeFormatted = new Date(movingTime)
+              .toISOString()
+              .substr(11, 8);
+
+            const formattedStartTime = `${startTime.slice(0, 10)} ${startTime.slice(11, 16)}`;
+            const formattedEndTime = `${endTime.slice(0, 10)} ${endTime.slice(11, 16)}`;
+
+            const infoDiv = L.control({ position: "topright" });
+            infoDiv.onAdd = function () {
+              const div = L.DomUtil.create("div", "info-panel");
+              div.innerHTML = `
+                <p><b>Start Time:</b> ${formattedStartTime}</p>
+                <p><b>End Time:</b> ${formattedEndTime}</p>
+                <p><b>Moving Time:</b> ${movingTimeFormatted}</p>
+                <p><b>Average Speed:</b> ${movingSpeed} km/h</p>
+                <p><b>Elevation Gain:</b> ${elevationGain} m</p>
+              `;
+              return div;
+            };
+            infoDiv.addTo(map);
+          })
+          .on("error", function (e) {
+            console.error("Error loading GPX file:", e);
+          })
+          .addTo(map);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
+</script>
+
+
+
+<style>
+  .info-panel {
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    padding: 10px; /* Add some space inside the panel */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    font-family: Arial, sans-serif; /* Ensure a clean font style */
+    color: #333; /* Dark text for readability */
+    line-height: 1.4; /* Improve text spacing */
+  }
+
+  .info-panel h4 {
+    margin: 0 0 5px; /* Small margin for the heading */
+    font-size: 16px; /* Slightly larger font size for the title */
+    color: #000; /* Darker color for emphasis */
+  }
+  #map {
+  width: 100%;
+  height: 200px;
+  border-radius: 10px; /* Adjust the value as needed for more or less rounding */
+  overflow: hidden; /* Ensure that the map content doesn't overflow the rounded corners */
+}
+
+
+  .info-panel p {
+    margin: 5px 0; /* Add space between paragraphs */
+    font-size: 14px; /* Consistent text size */
+  }
+
+#elevation-div {
+  width: 100%;
+  height: 100%; /* Match the height from the config */
+  border-radius: 10px;
+  overflow: hidden;
+}
+</style>
+
+      </div>
+    )}
       <Content />
     </article>
   </Container>
